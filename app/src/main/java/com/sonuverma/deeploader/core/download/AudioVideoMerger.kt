@@ -168,6 +168,7 @@ class AudioVideoMerger @Inject constructor(
     /**
      * Write all samples from an extractor track to a muxer track.
      */
+    @android.annotation.SuppressLint("WrongConstant")
     private fun writeSamples(
         extractor: MediaExtractor,
         muxer: MediaMuxer,
