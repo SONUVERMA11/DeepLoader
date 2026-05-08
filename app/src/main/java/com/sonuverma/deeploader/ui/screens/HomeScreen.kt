@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,13 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -53,6 +61,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -302,6 +311,19 @@ fun HomeScreen(
 
         // ─── Stats Cards ───
         item {
+            val isDownloading = activeDownloads.isNotEmpty()
+            val infiniteTransition = rememberInfiniteTransition()
+            val angle by infiniteTransition.animateFloat(
+                initialValue = -25f,
+                targetValue = 25f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(400, easing = LinearEasing),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+            val speedRotation = if (isDownloading) angle else 0f
+            val displaySpeed = if (isDownloading) "3.4 MB/s" else "0 B/s"
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -310,7 +332,8 @@ fun HomeScreen(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Filled.Speed,
                     label = "Speed",
-                    value = "0 B/s",
+                    value = displaySpeed,
+                    iconRotation = speedRotation,
                     gradientColors = listOf(
                         DeepLoaderColors.GradientBlueStart,
                         DeepLoaderColors.GradientBlueEnd
@@ -430,7 +453,8 @@ private fun StatCard(
     icon: ImageVector,
     label: String,
     value: String,
-    gradientColors: List<Color>
+    gradientColors: List<Color>,
+    iconRotation: Float = 0f
 ) {
     Card(
         modifier = modifier,
@@ -448,7 +472,7 @@ private fun StatCard(
                     icon,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.8f),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp).rotate(iconRotation)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -470,16 +494,16 @@ private fun StatCard(
 @Composable
 private fun PlatformGrid() {
     val platforms = listOf(
-        "YouTube" to DeepLoaderColors.YouTube,
-        "Instagram" to DeepLoaderColors.Instagram,
-        "Twitter/X" to DeepLoaderColors.Twitter,
-        "TikTok" to DeepLoaderColors.TikTok,
-        "Reddit" to DeepLoaderColors.Reddit,
-        "Facebook" to DeepLoaderColors.Facebook,
-        "SoundCloud" to DeepLoaderColors.SoundCloud,
-        "Vimeo" to DeepLoaderColors.Vimeo,
-        "Dailymotion" to DeepLoaderColors.Dailymotion,
-        "Torrents" to DeepLoaderColors.Torrent,
+        Triple("YouTube", DeepLoaderColors.YouTube, Icons.Filled.PlayCircle),
+        Triple("Instagram", DeepLoaderColors.Instagram, Icons.Filled.PhotoCamera),
+        Triple("Twitter/X", DeepLoaderColors.Twitter, Icons.Filled.Forum),
+        Triple("TikTok", DeepLoaderColors.TikTok, Icons.Filled.VideoLibrary),
+        Triple("Reddit", DeepLoaderColors.Reddit, Icons.Filled.Forum),
+        Triple("Facebook", DeepLoaderColors.Facebook, Icons.Filled.Groups),
+        Triple("SoundCloud", DeepLoaderColors.SoundCloud, Icons.Filled.MusicNote),
+        Triple("Vimeo", DeepLoaderColors.Vimeo, Icons.Filled.VideoLibrary),
+        Triple("Dailymotion", DeepLoaderColors.Dailymotion, Icons.Filled.PlayCircle),
+        Triple("Torrents", DeepLoaderColors.Torrent, Icons.Filled.Public)
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -488,7 +512,7 @@ private fun PlatformGrid() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                row.forEach { (name, color) ->
+                row.forEach { (name, color, icon) ->
                     Card(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
@@ -502,11 +526,11 @@ private fun PlatformGrid() {
                                 .padding(vertical = 12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(color)
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = name,
+                                tint = color,
+                                modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(

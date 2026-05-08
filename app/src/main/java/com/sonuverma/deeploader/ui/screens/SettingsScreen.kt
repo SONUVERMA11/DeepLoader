@@ -242,8 +242,8 @@ fun SettingsScreen(viewModel: MainViewModel? = null) {
                     SettingsToggle(
                         icon = Icons.Filled.SystemUpdate,
                         iconTint = DeepLoaderColors.AccentGreen,
-                        title = "Auto-Update yt-dlp",
-                        subtitle = "Keep extraction engine up to date",
+                        title = "Auto-Update Engines",
+                        subtitle = "Keep extraction engines up to date",
                         checked = autoUpdateYtDlp,
                         onToggle = { autoUpdateYtDlp = it }
                     )
@@ -259,8 +259,8 @@ fun SettingsScreen(viewModel: MainViewModel? = null) {
                     SettingsItem(
                         icon = Icons.Filled.Security,
                         iconTint = DeepLoaderColors.AccentOrange,
-                        title = "yt-dlp Version",
-                        subtitle = "Not installed",
+                        title = "Extraction Engine",
+                        subtitle = "Built-in (NewPipe v0.24.8)",
                         onClick = { /* TODO: Update check */ }
                     )
                 }

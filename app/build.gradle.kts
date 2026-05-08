@@ -85,7 +85,7 @@ android {
         abi {
             isEnable = true
             reset()
-            include("arm64-v8a", "armeabi-v7a", "x86_64") // x86_64 for emulators
+            include("arm64-v8a", "armeabi-v7a", "x86", "x86_64") // x86/x86_64 for emulators
             isUniversalApk = true // Fallback universal APK
         }
     }
@@ -168,6 +168,8 @@ dependencies {
     implementation("org.libtorrent4j:libtorrent4j:2.1.0-31")
     implementation("org.libtorrent4j:libtorrent4j-android-arm64:2.1.0-31")
     implementation("org.libtorrent4j:libtorrent4j-android-arm:2.1.0-31")
+    implementation("org.libtorrent4j:libtorrent4j-android-x86:2.1.0-31")
+    implementation("org.libtorrent4j:libtorrent4j-android-x86_64:2.1.0-31")
 
     // ─── Coroutines ───
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
