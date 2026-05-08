@@ -191,7 +191,7 @@ class DownloadWorker @AssistedInject constructor(
                     .build()
             )
 
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Download $downloadId failed", e)
             downloadDao.updateStatusWithError(
                 downloadId,
@@ -242,7 +242,11 @@ class DownloadWorker @AssistedInject constructor(
             }
             .build()
 
-        return ForegroundInfo(notificationId, notification)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            return ForegroundInfo(notificationId, notification, android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            return ForegroundInfo(notificationId, notification)
+        }
     }
 
     private fun getDefaultOutputDir(): String {

@@ -82,7 +82,12 @@ class TorrentEngine @Inject constructor(
     // Save directory for downloaded torrent files
     private val saveDirectory: File
         get() {
-            val dir = File(context.getExternalFilesDir(null), "DeepLoader/Torrents")
+            val externalDir = context.getExternalFilesDir(null)
+            val dir = if (externalDir != null) {
+                File(externalDir, "DeepLoader/Torrents")
+            } else {
+                File(context.filesDir, "DeepLoader/Torrents")
+            }
             dir.mkdirs()
             return dir
         }
@@ -129,7 +134,7 @@ class TorrentEngine @Inject constructor(
                 // Start periodic stats update loop
                 startStatsLoop()
 
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e(TAG, "Failed to start TorrentEngine", e)
                 _isRunning.value = false
             }
@@ -194,7 +199,7 @@ class TorrentEngine @Inject constructor(
             Log.i(TAG, "Torrent added: $infoHash (sequential=$sequential)")
             infoHash
 
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to add torrent: ${e.message}")
             null
         }

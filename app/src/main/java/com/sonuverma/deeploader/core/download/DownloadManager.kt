@@ -264,7 +264,11 @@ class DownloadManager @Inject constructor(
         val intent = Intent(context, DownloadService::class.java).apply {
             action = DownloadService.ACTION_START
         }
-        context.startForegroundService(intent)
+        try {
+            context.startForegroundService(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start foreground service: ${e.message}")
+        }
     }
 
     /**

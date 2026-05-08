@@ -172,7 +172,12 @@ class MediaStoreSaver @Inject constructor(
      * Used for temp files and as default download location.
      */
     fun getDownloadDirectory(): File {
-        val dir = File(context.getExternalFilesDir(null), SUBFOLDER)
+        val externalDir = context.getExternalFilesDir(null)
+        val dir = if (externalDir != null) {
+            File(externalDir, SUBFOLDER)
+        } else {
+            File(context.filesDir, SUBFOLDER)
+        }
         dir.mkdirs()
         return dir
     }
