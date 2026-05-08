@@ -45,6 +45,9 @@ jobs:
         run: ./gradlew lintDebug --stacktrace
         continue-on-error: true
 
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 

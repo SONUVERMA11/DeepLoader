@@ -48,3 +48,4 @@ obj/
 
 # Codespace specific
 .devcontainer/.env
+\n.jdk/
