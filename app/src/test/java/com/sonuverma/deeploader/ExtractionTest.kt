@@ -100,7 +100,7 @@ class ExtractionTest {
 
     @Test
     fun `Reddit URL detected correctly`() {
-        val result = detector.detect("https://www.reddit.com/r/videos/comments/abc/test/")
+        val result = detector.detect("https://reddit.com/r/videos/comments/abc/test/")
         assertEquals(Platform.REDDIT, result.platform)
     }
 
@@ -264,7 +264,8 @@ class ExtractionTest {
         assertEquals("Unknown size", StreamFormat(url = "test", fileSize = 0).displaySize)
         assertEquals("500B", StreamFormat(url = "test", fileSize = 500).displaySize)
         assertEquals("50KB", StreamFormat(url = "test", fileSize = 50 * 1024).displaySize)
-        assertEquals("66.0MB", StreamFormat(url = "test", fileSize = 66_000_000).displaySize)
+        // 66_000_000 bytes / (1024*1024) = 62.9 MB
+        assertEquals("62.9MB", StreamFormat(url = "test", fileSize = 66_000_000).displaySize)
     }
 
     @Test

@@ -30,6 +30,7 @@ import javax.inject.Singleton
 /**
  * PlayerManager — Centralized ExoPlayer/Media3 manager.
  *
+ *
  * Handles:
  *   - Stream URL playback (direct HTTP URLs from extraction)
  *   - Local file playback (downloaded files)
@@ -44,6 +45,7 @@ import javax.inject.Singleton
  *
  * Developer: Sonu Verma
  */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Singleton
 class PlayerManager @Inject constructor(
     @ApplicationContext private val context: Context
