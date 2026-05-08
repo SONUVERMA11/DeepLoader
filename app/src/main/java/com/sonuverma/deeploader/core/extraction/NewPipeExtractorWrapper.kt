@@ -94,7 +94,7 @@ class NewPipeExtractorWrapper @Inject constructor(
     private fun VideoStream.toStreamFormat(): StreamFormat {
         return StreamFormat(
             url = content ?: "",
-            format = mediaFormat?.suffix ?: "",
+            format = getFormat()?.suffix ?: "",
             formatNote = getResolution() ?: "",
             codec = codec ?: "",
             height = extractHeight(),
@@ -104,7 +104,7 @@ class NewPipeExtractorWrapper @Inject constructor(
             isVideoOnly = isVideoOnly,
             isAudioOnly = false,
             qualityLabel = getResolution() ?: "Unknown",
-            mimeType = mediaFormat?.mimeType ?: ""
+            mimeType = getFormat()?.mimeType ?: ""
         )
     }
 
@@ -114,7 +114,7 @@ class NewPipeExtractorWrapper @Inject constructor(
     private fun AudioStream.toStreamFormat(): StreamFormat {
         return StreamFormat(
             url = content ?: "",
-            format = mediaFormat?.suffix ?: "",
+            format = getFormat()?.suffix ?: "",
             formatNote = "audio only",
             codec = codec ?: "",
             height = 0,
@@ -124,7 +124,7 @@ class NewPipeExtractorWrapper @Inject constructor(
             isVideoOnly = false,
             isAudioOnly = true,
             qualityLabel = "${averageBitrate / 1000}kbps",
-            mimeType = mediaFormat?.mimeType ?: ""
+            mimeType = getFormat()?.mimeType ?: ""
         )
     }
 

@@ -120,9 +120,7 @@ class TorrentEngine @Inject constructor(
                 session.start(params)
 
                 // Bootstrap DHT from well-known nodes
-                session.dht().addDhtNode(com.frostwire.jlibtorrent.Pair(DHT_BOOTSTRAP_NODE_1, DHT_BOOTSTRAP_PORT))
-                session.dht().addDhtNode(com.frostwire.jlibtorrent.Pair(DHT_BOOTSTRAP_NODE_2, DHT_BOOTSTRAP_PORT))
-                session.dht().addDhtNode(com.frostwire.jlibtorrent.Pair(DHT_BOOTSTRAP_NODE_3, DHT_BOOTSTRAP_PORT))
+                settings.setString(settings_pack.string_types.dht_bootstrap_nodes.swigValue(), "$DHT_BOOTSTRAP_NODE_1:$DHT_BOOTSTRAP_PORT,$DHT_BOOTSTRAP_NODE_2:$DHT_BOOTSTRAP_PORT,$DHT_BOOTSTRAP_NODE_3:$DHT_BOOTSTRAP_PORT")
 
                 sessionManager = session
                 _isRunning.value = true
@@ -180,7 +178,7 @@ class TorrentEngine @Inject constructor(
                 return infoHash
             }
 
-            session.download(magnetUri, saveDirectory)
+            session.download(magnetUri, saveDirectory, org.libtorrent4j.swig.torrent_flags_t())
 
             // Initial state entry
             val currentStates = _torrentStates.value.toMutableMap()
@@ -211,7 +209,7 @@ class TorrentEngine @Inject constructor(
         try {
             val session = sessionManager ?: return
             if (deleteFiles) {
-                session.remove(handle, SessionManager.Options.DELETE_FILES)
+                session.remove(handle, org.libtorrent4j.SessionHandle.DELETE_FILES)
             } else {
                 session.remove(handle)
             }
@@ -248,9 +246,9 @@ class TorrentEngine @Inject constructor(
      */
     fun setSequentialMode(infoHash: String, enabled: Boolean) {
         activeTorrents[infoHash]?.setFlags(
-            if (enabled) TorrentHandle.Flags.SEQUENTIAL_DOWNLOAD
-            else TorrentHandle.Flags(),
-            TorrentHandle.Flags.SEQUENTIAL_DOWNLOAD
+            if (enabled) org.libtorrent4j.TorrentFlags.SEQUENTIAL_DOWNLOAD
+            else org.libtorrent4j.swig.torrent_flags_t(),
+            org.libtorrent4j.TorrentFlags.SEQUENTIAL_DOWNLOAD
         )
         updateTorrentState(infoHash) { it.copy(isStreaming = enabled) }
     }
@@ -260,7 +258,7 @@ class TorrentEngine @Inject constructor(
      * Priority 0 = skip, 1 = low, 4 = normal, 7 = highest
      */
     fun setFilePriority(infoHash: String, fileIndex: Int, priority: Int) {
-        activeTorrents[infoHash]?.filePriority(fileIndex, com.frostwire.jlibtorrent.Priority.fromSwig(priority))
+        activeTorrents[infoHash]?.filePriority(fileIndex, org.libtorrent4j.Priority.fromSwig(priority))
     }
 
     /**
@@ -389,8 +387,8 @@ class TorrentEngine @Inject constructor(
                         totalUpSpeed += upSpeed
 
                         val torrentStatus = when {
-                            status.isPaused -> TorrentStatus.PAUSED
-                            status.isFinished -> TorrentStatus.COMPLETED
+                            status.flags().and_(org.libtorrent4j.TorrentFlags.PAUSED).non_zero() -> TorrentStatus.PAUSED
+                            status.isFinished() -> TorrentStatus.COMPLETED
                             status.isSeeding -> TorrentStatus.SEEDING
                             progress > 0f -> TorrentStatus.DOWNLOADING
                             else -> TorrentStatus.CHECKING
