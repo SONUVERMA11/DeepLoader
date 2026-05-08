@@ -1,0 +1,85 @@
+name: Build DeepLoader APK
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Grant Gradle execute permission
+        run: chmod +x gradlew
+
+      - name: Run lint checks
+        run: ./gradlew lintDebug --stacktrace
+        continue-on-error: true
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeepLoader-debug
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.html
+          retention-days: 7
+
+      - name: Create GitHub Release (on push only)
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "DeepLoader Build #${{ github.run_number }}"
+          files: app/build/outputs/apk/debug/*.apk
+          body: |
+            ## 🚀 DeepLoader — Auto Build #${{ github.run_number }}
+
+            **Developer:** Sonu Verma
+            **Commit:** `${{ github.sha }}`
+            **Branch:** `main`
+
+            ### 📱 Installation
+            1. Download the APK below
+            2. Enable "Install from unknown sources" in device Settings
+            3. Open the downloaded APK to install
+
+            ---
+            *Built automatically by GitHub Actions*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

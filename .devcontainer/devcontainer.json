@@ -1,0 +1,38 @@
+{
+  "name": "DeepLoader Android",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "jdkDistribution": "ms"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup-android.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "mathiasfrohlich.Kotlin",
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle",
+        "naco-siren.gradle-language"
+      ],
+      "settings": {
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+  "remoteEnv": {
+    "ANDROID_HOME": "/home/vscode/android-sdk",
+    "ANDROID_SDK_ROOT": "/home/vscode/android-sdk",
+    "PATH": "${PATH}:/home/vscode/android-sdk/cmdline-tools/latest/bin:/home/vscode/android-sdk/platform-tools"
+  },
+  "forwardPorts": [5555],
+  "portsAttributes": {
+    "5555": {
+      "label": "ADB",
+      "onAutoForward": "silent"
+    }
+  }
+}
