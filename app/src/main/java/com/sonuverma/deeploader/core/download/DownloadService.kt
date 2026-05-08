@@ -72,12 +72,12 @@ class DownloadService : Service() {
         return NotificationCompat.Builder(this, DeepLoaderApp.CHANNEL_DOWNLOADS)
             .setContentTitle("DeepLoader")
             .setContentText("Downloads in progress...")
-            .setSmallIcon(android.R.drawable.stat_sys_download)
+            .setSmallIcon(com.sonuverma.deeploader.R.drawable.ic_launcher_foreground)
             .setContentIntent(contentIntent)
             .setOngoing(true)
             .setSilent(true)
-            .addAction(android.R.drawable.ic_media_pause, "Pause All", pauseIntent)
-            .addAction(android.R.drawable.ic_delete, "Cancel All", cancelIntent)
+            .addAction(0, "Pause All", pauseIntent)
+            .addAction(0, "Cancel All", cancelIntent)
             .build()
     }
 

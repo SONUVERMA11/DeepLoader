@@ -28,7 +28,26 @@ class DeepLoaderApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        setupCrashLogger()
         createNotificationChannels()
+    }
+
+    private fun setupCrashLogger() {
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            try {
+                val crashFile = java.io.File(getExternalFilesDir(null), "crash.log")
+                val writer = java.io.FileWriter(crashFile, true)
+                writer.append("\n\n--- CRASH LOG [${java.util.Date()}] ---\n")
+                val pw = java.io.PrintWriter(writer)
+                throwable.printStackTrace(pw)
+                pw.flush()
+                writer.close()
+            } catch (e: Exception) {
+                // Ignore
+            }
+            defaultHandler?.uncaughtException(thread, throwable)
+        }
     }
 
     /**

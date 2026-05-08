@@ -178,7 +178,9 @@ class MediaStoreSaver @Inject constructor(
         } else {
             File(context.filesDir, SUBFOLDER)
         }
-        dir.mkdirs()
+        if (!dir.exists() && !dir.mkdirs()) {
+            Log.e(TAG, "Failed to create download directory: ${dir.absolutePath}")
+        }
         return dir
     }
 

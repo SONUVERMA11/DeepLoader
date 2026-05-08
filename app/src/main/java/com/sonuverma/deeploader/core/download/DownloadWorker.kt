@@ -230,7 +230,7 @@ class DownloadWorker @AssistedInject constructor(
         val notification = NotificationCompat.Builder(applicationContext, DeepLoaderApp.CHANNEL_DOWNLOADS)
             .setContentTitle("DeepLoader")
             .setContentText(if (progress >= 0) "$title — $progress%" else title)
-            .setSmallIcon(android.R.drawable.stat_sys_download)
+            .setSmallIcon(com.sonuverma.deeploader.R.drawable.ic_launcher_foreground)
             .setOngoing(true)
             .setSilent(true)
             .apply {

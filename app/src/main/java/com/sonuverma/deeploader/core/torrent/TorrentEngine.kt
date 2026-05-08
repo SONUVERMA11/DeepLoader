@@ -88,7 +88,9 @@ class TorrentEngine @Inject constructor(
             } else {
                 File(context.filesDir, "DeepLoader/Torrents")
             }
-            dir.mkdirs()
+            if (!dir.exists() && !dir.mkdirs()) {
+                Log.e(TAG, "Failed to create save directory: ${dir.absolutePath}")
+            }
             return dir
         }
 
@@ -301,11 +303,15 @@ class TorrentEngine @Inject constructor(
             )
 
             override fun alert(alert: Alert<*>) {
-                when (alert) {
-                    is AddTorrentAlert -> onTorrentAdded(alert)
-                    is MetadataReceivedAlert -> onMetadataReceived(alert)
-                    is PieceFinishedAlert -> onPieceFinished(alert)
-                    is TorrentFinishedAlert -> onTorrentFinished(alert)
+                try {
+                    when (alert) {
+                        is AddTorrentAlert -> onTorrentAdded(alert)
+                        is MetadataReceivedAlert -> onMetadataReceived(alert)
+                        is PieceFinishedAlert -> onPieceFinished(alert)
+                        is TorrentFinishedAlert -> onTorrentFinished(alert)
+                    }
+                } catch (e: Throwable) {
+                    Log.e(TAG, "Alert listener error", e)
                 }
             }
         }
@@ -418,7 +424,7 @@ class TorrentEngine @Inject constructor(
                         dhtNodes = sessionManager?.stats()?.dhtNodes()?.toLong() ?: 0
                     )
 
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     // Stats update failure is non-fatal
                 }
 
