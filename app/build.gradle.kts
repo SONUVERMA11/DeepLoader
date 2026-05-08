@@ -50,6 +50,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -147,7 +148,8 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer-dash:1.5.1")
 
     // ─── NewPipe Extractor (YouTube + multi-site extraction) ───
-    implementation("com.github.AioiLight:NewPipeExtractor:v0.24.5")
+    implementation("com.github.teamnewpipe:NewPipeExtractor:v0.24.8")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 
     // ─── JSON Serialization ───
     implementation("com.google.code.gson:gson:2.11.0")
