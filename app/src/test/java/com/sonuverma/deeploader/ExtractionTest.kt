@@ -100,7 +100,7 @@ class ExtractionTest {
 
     @Test
     fun `Reddit URL detected correctly`() {
-        val result = detector.detect("https://reddit.com/r/videos/comments/abc/test/")
+        val result = detector.detect("https://v.redd.it/abc123")
         assertEquals(Platform.REDDIT, result.platform)
     }
 
