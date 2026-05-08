@@ -86,6 +86,7 @@ fun VideoPlayerScreen(
     onBack: () -> Unit = {}
 ) {
     val playbackState by playerManager.playbackState.collectAsState()
+    val isBackgroundMode by playerManager.isBackgroundMode.collectAsState()
     var showControls by remember { mutableStateOf(true) }
     var showSpeedSelector by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -336,15 +337,14 @@ fun VideoPlayerScreen(
                             // Background audio toggle
                             IconButton(
                                 onClick = {
-                                    val current = playerManager.isBackgroundMode.value
-                                    playerManager.setBackgroundMode(!current)
+                                    playerManager.setBackgroundMode(!isBackgroundMode)
                                 },
                                 modifier = Modifier.size(36.dp)
                             ) {
                                 Icon(
                                     Icons.Filled.GraphicEq,
                                     contentDescription = "Background Audio",
-                                    tint = if (playerManager.isBackgroundMode.value)
+                                    tint = if (isBackgroundMode)
                                         DeepLoaderColors.AccentGreen
                                     else Color.White.copy(alpha = 0.7f),
                                     modifier = Modifier.size(20.dp)

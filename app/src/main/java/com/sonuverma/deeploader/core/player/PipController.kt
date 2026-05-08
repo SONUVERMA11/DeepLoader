@@ -39,8 +39,7 @@ class PipController @Inject constructor(
      * Check if the device supports PiP mode.
      */
     fun isPipSupported(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-               context.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
 
     /**
@@ -56,29 +55,27 @@ class PipController @Inject constructor(
             return
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val aspectRatio = if (videoWidth > 0 && videoHeight > 0) {
-                Rational(videoWidth, videoHeight)
-            } else {
-                DEFAULT_ASPECT_RATIO
-            }
+        val aspectRatio = if (videoWidth > 0 && videoHeight > 0) {
+            Rational(videoWidth, videoHeight)
+        } else {
+            DEFAULT_ASPECT_RATIO
+        }
 
-            val params = PictureInPictureParams.Builder()
-                .setAspectRatio(aspectRatio)
-                .apply {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        setAutoEnterEnabled(true)
-                        setSeamlessResizeEnabled(true)
-                    }
+        val params = PictureInPictureParams.Builder()
+            .setAspectRatio(aspectRatio)
+            .apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    setAutoEnterEnabled(true)
+                    setSeamlessResizeEnabled(true)
                 }
-                .build()
-
-            try {
-                activity.enterPictureInPictureMode(params)
-                Log.i(TAG, "Entered PiP mode ($videoWidth x $videoHeight)")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to enter PiP: ${e.message}")
             }
+            .build()
+
+        try {
+            activity.enterPictureInPictureMode(params)
+            Log.i(TAG, "Entered PiP mode ($videoWidth x $videoHeight)")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to enter PiP: ${e.message}")
         }
     }
 
@@ -86,7 +83,7 @@ class PipController @Inject constructor(
      * Update PiP parameters (e.g., when video aspect ratio changes).
      */
     fun updatePipParams(activity: Activity, videoWidth: Int, videoHeight: Int) {
-        if (!isPipSupported() || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        if (!isPipSupported()) return
 
         val aspectRatio = if (videoWidth > 0 && videoHeight > 0) {
             Rational(videoWidth, videoHeight)

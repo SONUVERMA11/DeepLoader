@@ -36,43 +36,41 @@ class DeepLoaderApp : Application(), Configuration.Provider {
      * Three channels: active downloads, completed downloads, and app updates.
      */
     private fun createNotificationChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager = getSystemService(NotificationManager::class.java)
+        val manager = getSystemService(NotificationManager::class.java)
 
-            // Active downloads channel — high priority for ongoing download progress
-            val downloadChannel = NotificationChannel(
-                CHANNEL_DOWNLOADS,
-                "Active Downloads",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Shows progress for active downloads"
-                setShowBadge(false)
-            }
-
-            // Completed downloads channel — default priority for completion alerts
-            val completedChannel = NotificationChannel(
-                CHANNEL_COMPLETED,
-                "Completed Downloads",
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Notifies when downloads complete"
-                setShowBadge(true)
-            }
-
-            // App update channel — low priority for background update checks
-            val updateChannel = NotificationChannel(
-                CHANNEL_UPDATES,
-                "App Updates",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Notifications for app and component updates"
-                setShowBadge(false)
-            }
-
-            manager.createNotificationChannels(
-                listOf(downloadChannel, completedChannel, updateChannel)
-            )
+        // Active downloads channel — high priority for ongoing download progress
+        val downloadChannel = NotificationChannel(
+            CHANNEL_DOWNLOADS,
+            "Active Downloads",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Shows progress for active downloads"
+            setShowBadge(false)
         }
+
+        // Completed downloads channel — default priority for completion alerts
+        val completedChannel = NotificationChannel(
+            CHANNEL_COMPLETED,
+            "Completed Downloads",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Notifies when downloads complete"
+            setShowBadge(true)
+        }
+
+        // App update channel — low priority for background update checks
+        val updateChannel = NotificationChannel(
+            CHANNEL_UPDATES,
+            "App Updates",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Notifications for app and component updates"
+            setShowBadge(false)
+        }
+
+        manager.createNotificationChannels(
+            listOf(downloadChannel, completedChannel, updateChannel)
+        )
     }
 
     companion object {

@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Support for Android 14+ partial photo access -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
     <!-- ─── Foreground Service (Downloads + Media) ─── -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -36,6 +38,7 @@
         android:name=".DeepLoaderApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        tools:ignore="PictureInPictureIssue"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -88,7 +91,8 @@
         <service
             android:name=".core.player.PlaybackService"
             android:foregroundServiceType="mediaPlayback"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>

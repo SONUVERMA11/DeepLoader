@@ -62,11 +62,11 @@ import com.sonuverma.deeploader.ui.theme.DeepLoaderColors
 @Composable
 fun DownloadCard(
     download: DownloadEntity,
+    modifier: Modifier = Modifier,
     onPause: () -> Unit = {},
     onResume: () -> Unit = {},
     onRetry: () -> Unit = {},
-    onCancel: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onCancel: () -> Unit = {}
 ) {
     val status = try {
         DownloadStatus.valueOf(download.status)
