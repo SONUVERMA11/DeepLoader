@@ -1,51 +1,41 @@
-# DeepLoader .gitignore
 
-# Gradle
-.gradle/
-build/
-!gradle/wrapper/gradle-wrapper.jar
-
+*~
+*.aab
 # Android SDK
-local.properties
-
+*.ap_
+*.apk
+# APK files
+build/
+*.class
+# Codespace specific
+crashlytics-build.properties
+# Crash reports
+# DeepLoader .gitignore
+.devcontainer/.env
+.DS_Store
+.externalNativeBuild/
+.gradle/
+# Gradle
+!gradle/wrapper/gradle-wrapper.jar
 # IDE
 .idea/
 *.iml
-*.iws
 *.ipr
-
-# Kotlin
-*.class
-
-# APK files
-*.apk
-*.ap_
-*.aab
-
-# Signing
+*.iws
+.jdk/
 *.jks
 *.keystore
-release.properties
-
-# OS
-.DS_Store
-Thumbs.db
-*.swp
-*~
-
-# Logs
+# Kotlin
+local.properties
 *.log
-
-# Crash reports
-crashlytics-build.properties
-
+# Logs
 # Native
-*.so
-obj/
-
-# Test
-.externalNativeBuild/
-
-# Codespace specific
-.devcontainer/.env
 \n.jdk/
+obj/
+# OS
+release.properties
+# Signing
+*.so
+*.swp
+# Test
+Thumbs.db
